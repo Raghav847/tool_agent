@@ -102,3 +102,19 @@ TOOL_REGISTRY = {
     "list_file": list_files_tool,
     "edit_file": edit_file_tool
 }
+
+def get_tool_str_representation(tool_name: str) -> str:
+    tool = TOOL_REGISTRY[tool_name]
+    return f"""
+    Name: {tool_name}
+    Description: {tool.__doc__}
+    Signature: {inspect.signature(tool)}
+    """
+
+def get_full_system_prompt():
+    tool_str_repr = ""
+    for tool_name in TOOL_REGISTRY:
+        tool_str_repr += "TOOL\n===" + get_tool_str_representation(tool_name)
+        tool_str_repr += f"\n{'='*15}\n"
+    return SYSTEM_PROMPT.format(tool_list_repr=tool_str_repr)
+
